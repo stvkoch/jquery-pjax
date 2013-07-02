@@ -228,6 +228,7 @@ function pjax(options) {
   }
 
   options.success = function(data, status, xhr) {
+
     // If $.pjax.defaults.version is a function, invoke it first.
     // Otherwise it can be a static string.
     var currentVersion = (typeof $.pjax.defaults.version === 'function') ?
@@ -264,7 +265,12 @@ function pjax(options) {
     }
 
     if (container.title) document.title = container.title
-    context.html(container.contents)
+
+    var method = $(options.target).closest('[data-action]')
+    if(method.length)
+      context[method.data('action')](container.contents);
+    else
+      context.html(container.contents)
     executeScriptTags(container.scripts)
 
     // Scroll to top by default
